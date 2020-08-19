@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">TaskApp</string>
+
+    <string name="label_admin_panel">Admin Panel</string>
+    <string name="label_sign_up">SignUp</string>
+    <string name="label_login">Login</string>
+
+
+    <string name="text_view_username">Username:</string>
+    <string name="text_view_task_number">Task\'s Number:</string>
+    <string name="text_view_empty_task_list">You Don\'t Have Any Task.</string>
+
+    <string name="text_view_detail_title">Title</string>
+    <string name="text_view_detail_description">Description</string>
+    <string name="text_view_detail_state">State</string>
+
+
+    <string name="button_build">Build</string>
+
+    <string name="state_TODO">TODO</string>
+    <string name="state_DOING">DOING</string>
+    <string name="state_DONE">DONE</string>
+
+    <string name="button_delete">Delete</string>
+    <string name="button_edit">Edit</string>
+    <string name="button_save">Save</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <string name="button_Login">Login</string>
+    <string name="button_sign_up">Sign up</string>
+
+    <string name="menu_user_log_out">Log Out</string>
+    <string name="menu_user">User</string>
+    <string name="menu_user_delete_all_task">Delete All Task</string>
+    <string name="menu_admin_panel">Admin panel</string>
+
+    <string name="app_bar_search">Search</string>
+
+    <string name="toast_incorrect_info">نام كاربري يا رمز عبور صحيح نميباشد.</string>
+    <string name="toast_exist_user">این نام کاربری موجود میباشد!!\nنام کاربری دیگری انتخاب نمایید.</string>
+    <string name="input_wrong_format">فرمت ورودی درست نیست!!</string>
+
+
+    <string name="dialog_delete_all_title">Confirm Delete</string>
+    <string name="dialog_delete_all_message">Are you sure you want to delete all task?</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

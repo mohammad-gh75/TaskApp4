@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/app_bar_search"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_user"
+        android:icon="@drawable/ic_user_menu"
+        android:title="@string/menu_user"
+        app:showAsAction="always">
+        <menu>
+
+            <item
+                android:id="@+id/menu_user_delete_all"
+                android:title="@string/menu_user_delete_all_task" />
+            <item
+                android:id="@+id/menu_admin_panel"
+                android:title="@string/menu_admin_panel"
+                android:visible="false" />
+            <item
+                android:id="@+id/menu_user_log_out"
+                android:title="@string/menu_user_log_out" />
+        </menu>
+    </item>
+</menu>
