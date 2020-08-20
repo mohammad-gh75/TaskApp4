@@ -22,6 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.maktab36.taskapp.R;
+import org.maktab36.taskapp.SearchActivity;
 import org.maktab36.taskapp.controller.fragment.TaskDetailFragment;
 import org.maktab36.taskapp.controller.fragment.TaskListFragment;
 import org.maktab36.taskapp.model.TaskState;
@@ -162,7 +163,7 @@ public class TabViewPagerActivity extends AppCompatActivity {
                 startAdminActivity();
                 return true;
             case R.id.menu_search:
-                showSearchDialog();
+                startSearchActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -198,7 +199,8 @@ public class TabViewPagerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void showSearchDialog(){
-
+    private void startSearchActivity(){
+        Intent intent= SearchActivity.newIntent(this);
+        startActivity(intent);
     }
 }

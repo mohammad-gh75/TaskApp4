@@ -263,11 +263,11 @@ public class TaskDetailFragment extends DialogFragment {
             userSelectedTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_USER_SELECTED_TIME);
             mButtonTime.setText(mTimeFormatter.format(userSelectedTime));
         }
-        setCrimeDate(userSelectedDate, userSelectedTime);
+        setTaskDate(userSelectedDate, userSelectedTime);
 //        updateTask();
     }
 
-    private void setCrimeDate(Date userSelectedDate ,Date userSelectedTime) {
+    private void setTaskDate(Date userSelectedDate , Date userSelectedTime) {
         Calendar calendar=Calendar.getInstance();
 
         calendar.setTime(userSelectedTime);

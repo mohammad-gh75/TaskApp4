@@ -12,6 +12,8 @@ import org.maktab36.taskapp.model.Task;
 import org.maktab36.taskapp.model.TaskState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -159,6 +161,61 @@ public class TaskRepository {
             selectionArgs = new String[]{userId.toString()};
         }
         mDatabase.delete(TaskTable.NAME, selection, selectionArgs);
+    }
+
+    public List<Task> searchTasks(UUID userId, String name, String description, Date dateFrom, Date dateTo) {
+        List<Task> searchedTasks = new ArrayList<>();
+        StringBuilder selectBuilder = new StringBuilder();
+        List<String> selectionList = new ArrayList<>();
+        if (!name.equals("")) {
+            if (selectBuilder.length() != 0) {
+                selectBuilder.append(" AND ");
+            }
+            selectBuilder.append(TaskTable.COLS.NAME + " LIKE ?");
+            selectionList.add("%"+name+"%");
+        }
+        if (!description.equals("")) {
+            if (selectBuilder.length() != 0) {
+                selectBuilder.append(" AND ");
+            }
+            selectBuilder.append(TaskTable.COLS.DESCRIPTION + " LIKE ?");
+            selectionList.add("%"+description+"%");
+        }
+        if (dateFrom!=null) {
+            if (selectBuilder.length() != 0) {
+                selectBuilder.append(" AND ");
+            }
+            selectBuilder.append(TaskTable.COLS.DATE + ">=?");
+            selectionList.add(String.valueOf(dateFrom.getTime()));
+        }
+        if (dateTo!=null) {
+            if (selectBuilder.length() != 0) {
+                selectBuilder.append(" AND ");
+            }
+            selectBuilder.append(TaskTable.COLS.DATE + "<=?");
+            selectionList.add(String.valueOf(dateTo.getTime()));
+        }
+        if (!userId.equals(mAdminId)) {
+            if (selectBuilder.length() != 0) {
+                selectBuilder.append(" AND ");
+            }
+            selectBuilder.append(TaskTable.COLS.USER_ID + "=?");
+            selectionList.add(userId.toString());
+        }
+        String selection = selectBuilder.toString();
+        String[] selectionArgs=new String[selectionList.size()];
+        selectionList.toArray(selectionArgs);
+        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
+        try {
+            taskCursorWrapper.moveToFirst();
+            while (!taskCursorWrapper.isAfterLast()) {
+                searchedTasks.add(taskCursorWrapper.getTask());
+                taskCursorWrapper.moveToNext();
+            }
+        } finally {
+            taskCursorWrapper.close();
+        }
+        return searchedTasks;
     }
 
     public int getNumberOfUserTasks(UUID userId) {

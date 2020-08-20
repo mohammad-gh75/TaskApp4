@@ -24,6 +24,12 @@
     <string name="button_delete">Delete</string>
     <string name="button_edit">Edit</string>
     <string name="button_save">Save</string>
+    <string name="button_search">Search</string>
+    <string name="button_date">Date</string>
+    <string name="button_time">Time</string>
+
+    <string name="search_from">From:</string>
+    <string name="search_to">To:</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>

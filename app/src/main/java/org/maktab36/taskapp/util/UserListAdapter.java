@@ -84,6 +84,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserHo
 
         public void bindUser(User user) {
             mUser=user;
+            if(user.equals(UserRepository.getInstance(mFragment.getActivity()).getAdmin())){
+                mImageViewDeleteUser.setVisibility(View.INVISIBLE);
+            }
             mTextViewUsername.setText(user.getUsername());
             mTextViewUserMembershipDate.setText(user.getMembershipDate().toString());
             int taskNumber=TaskRepository

@@ -9,11 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.activity.AdminPanelActivity"
-            android:label="@string/label_admin_panel"/>
-        <activity android:name=".controller.activity.SignUpActivity"
-            android:label="@string/label_sign_up"/>
-        <activity android:name=".controller.activity.LoginActivity"
+        <activity android:name=".SearchActivity"></activity>
+        <activity
+            android:name=".controller.activity.AdminPanelActivity"
+            android:label="@string/label_admin_panel" />
+        <activity
+            android:name=".controller.activity.SignUpActivity"
+            android:label="@string/label_sign_up" />
+        <activity
+            android:name=".controller.activity.LoginActivity"
             android:label="@string/label_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
