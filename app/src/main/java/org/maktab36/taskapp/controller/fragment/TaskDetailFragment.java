@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 
 import org.maktab36.taskapp.R;
@@ -46,8 +48,10 @@ public class TaskDetailFragment extends DialogFragment {
     private Button mButtonEdit;
     private Button mButtonSave;
     private Button mButtonCancel;
+    private ImageButton mButtonShare;
     private SimpleDateFormat mDateFormatter;
     private SimpleDateFormat mTimeFormatter;
+    private SimpleDateFormat mDateTimeFormatter;
     private TaskRepository mTaskRepository;
     private UserRepository mUserRepository;
     private boolean mButtonVisibility;
@@ -86,6 +90,8 @@ public class TaskDetailFragment extends DialogFragment {
 
         mDateFormatter=new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         mTimeFormatter=new SimpleDateFormat("HH:mm", Locale.US);
+        mDateTimeFormatter=new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss",Locale.US);
+
     }
 
     @Override
@@ -111,6 +117,7 @@ public class TaskDetailFragment extends DialogFragment {
         mButtonDelete=view.findViewById(R.id.button_delete);
         mButtonEdit=view.findViewById(R.id.button_edit);
         mButtonSave=view.findViewById(R.id.button_save);
+        mButtonShare=view.findViewById(R.id.button_share);
     }
 
     @Override
@@ -129,10 +136,12 @@ public class TaskDetailFragment extends DialogFragment {
             mButtonDelete.setVisibility(View.GONE);
             mButtonEdit.setVisibility(View.GONE);
             mButtonCancel.setVisibility(View.VISIBLE);
+            mButtonShare.setVisibility(View.GONE);
         }else{
             mButtonDelete.setVisibility(View.VISIBLE);
             mButtonEdit.setVisibility(View.VISIBLE);
             mButtonCancel.setVisibility(View.GONE);
+            mButtonShare.setVisibility(View.VISIBLE);
         }
     }
 
@@ -225,6 +234,22 @@ public class TaskDetailFragment extends DialogFragment {
                 timePickerFragment.show(getFragmentManager(),DIALOG_FRAGMENT_TAG);
             }
         });
+
+        mButtonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent= ShareCompat
+                        .IntentBuilder
+                        .from(getActivity())
+                        .setText(getShareText())
+                        .setSubject(getString(R.string.task_share_subject))
+                        .setType("text/plain")
+                        .getIntent();
+                Intent shareIntent=Intent.createChooser(sendIntent,null);
+                if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null)
+                    startActivity(shareIntent);
+            }
+        });
     }
 
     private void setViewEnabled(boolean enabled) {
@@ -259,7 +284,6 @@ public class TaskDetailFragment extends DialogFragment {
             mButtonTime.setText(mTimeFormatter.format(userSelectedTime));
         }
         setTaskDate(userSelectedDate, userSelectedTime);
-//        updateTask();
     }
 
     private void setTaskDate(Date userSelectedDate , Date userSelectedTime) {
@@ -273,5 +297,12 @@ public class TaskDetailFragment extends DialogFragment {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         mCurrentTask.setDate(calendar.getTime());
+    }
+
+    private String getShareText(){
+        return "Task name: "+mCurrentTask.getName()+
+                "\nTask description: "+mCurrentTask.getDescription()+
+                "\nTask state: "+mCurrentTask.getState().toString()+
+                "\nTask date: "+mDateTimeFormatter.format(mCurrentTask.getDate());
     }
 }
