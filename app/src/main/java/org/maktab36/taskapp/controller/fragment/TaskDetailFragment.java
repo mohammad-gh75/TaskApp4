@@ -73,13 +73,13 @@ public class TaskDetailFragment extends DialogFragment {
 
         UUID taskId= (UUID) getArguments().getSerializable(ARG_TASK_ID);
         if(taskId!=null) {
-            mCurrentTask = mTaskRepository.get(mUserRepository.getCurrentUser().getId(),taskId);
+            mCurrentTask = mTaskRepository.get(mUserRepository.getCurrentUser().getUUID(),taskId);
             mButtonVisibility=false;
             mViewsEnabled=false;
         }else{
             mViewsEnabled=true;
             mButtonVisibility=true;
-            mCurrentTask=new Task(mUserRepository.getCurrentUser().getId());
+            mCurrentTask=new Task(mUserRepository.getCurrentUser().getUUID());
             mCurrentTask.setState(TaskState.TODO);
             mCurrentTask.setDate(new Date());
         }
@@ -153,23 +153,20 @@ public class TaskDetailFragment extends DialogFragment {
                 break;
         }
     }
-    private Task getUI(){
-        Task tempTask=new Task(mUserRepository.getCurrentUser().getId());
-        tempTask.setId(mCurrentTask.getId());
-        tempTask.setName(mEditTextTitle.getText().toString());
-        tempTask.setDescription(mEditTextDescription.getText().toString());
+    private void getUI(){
+        mCurrentTask.setName(mEditTextTitle.getText().toString());
+        mCurrentTask.setDescription(mEditTextDescription.getText().toString());
         switch (mRadioGroupStates.getCheckedRadioButtonId()){
             case R.id.radio_button_state_doing:
-                tempTask.setState(TaskState.DOING);
+                mCurrentTask.setState(TaskState.DOING);
                 break;
             case R.id.radio_button_state_done:
-                tempTask.setState(TaskState.DONE);
+                mCurrentTask.setState(TaskState.DONE);
                 break;
             case R.id.radio_button_state_todo:
-                tempTask.setState(TaskState.TODO);
+                mCurrentTask.setState(TaskState.TODO);
                 break;
         }
-        return tempTask;
     }
     private void setListeners() {
         mButtonDelete.setOnClickListener(new View.OnClickListener() {
@@ -192,15 +189,13 @@ public class TaskDetailFragment extends DialogFragment {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Task task=getUI();
                 if(mButtonVisibility){
-                    task.setDate(mCurrentTask.getDate());
-                    mCurrentTask=task;
+                    getUI();
                     mTaskRepository.insert(mCurrentTask);
                     ((TabViewPagerActivity)getActivity()).updateFragments();
                 }else{
-                    task.setDate(mCurrentTask.getDate());
-                    mTaskRepository.update(task);
+                    getUI();
+                    mTaskRepository.update(mCurrentTask);
                     setResult();
                 }
                 dismiss();

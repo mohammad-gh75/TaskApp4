@@ -5,23 +5,15 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.maktab36.taskapp.R;
 import org.maktab36.taskapp.model.Task;
@@ -30,9 +22,7 @@ import org.maktab36.taskapp.repository.TaskRepository;
 import org.maktab36.taskapp.repository.UserRepository;
 import org.maktab36.taskapp.util.TaskListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 
@@ -64,7 +54,7 @@ public class TaskListFragment extends Fragment {
 
         mTaskState = TaskState.valueOf(getArguments().getString(ARG_TASK_STATE));
 
-        mTasks = getTaskList(UserRepository.getInstance(getActivity()).getCurrentUser().getId());
+        mTasks = getTaskList(UserRepository.getInstance(getActivity()).getCurrentUser().getUUID());
     }
 
     private List<Task> getTaskList(UUID userId) {
@@ -115,10 +105,10 @@ public class TaskListFragment extends Fragment {
     }*/
 
     public void updateUI() {
-        mTasks=getTaskList(UserRepository.getInstance(getActivity()).getCurrentUser().getId());
+        mTasks=getTaskList(UserRepository.getInstance(getActivity()).getCurrentUser().getUUID());
         if(mAdapter==null){
             mAdapter = new TaskListAdapter(this, mTasks,
-                    UserRepository.getInstance(getActivity()).getCurrentUser().getId());
+                    UserRepository.getInstance(getActivity()).getCurrentUser().getUUID());
             mRecyclerView.setAdapter(mAdapter);
         }else{
             mAdapter.setTaskList(mTasks);

@@ -1,17 +1,38 @@
 package org.maktab36.taskapp.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import org.maktab36.taskapp.util.DateUtils;
 
 import java.util.Date;
 import java.util.UUID;
-
+@Entity(tableName = "TaskTable")
 public class Task {
-    private UUID mId;
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+    @ColumnInfo(name = "uuid")
+    private UUID mUUID;
+    @ColumnInfo(name = "name")
     private String mName;
+    @ColumnInfo(name = "state")
     private TaskState mState;
+    @ColumnInfo(name = "description")
     private String mDescription;
+    @ColumnInfo(name = "date")
     private Date mDate;
+    @ColumnInfo(name = "userId")
     private UUID mUserId;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public UUID getUserId() {
         return mUserId;
@@ -37,12 +58,12 @@ public class Task {
         mState = state;
     }
 
-    public UUID getId() {
-        return mId;
+    public UUID getUUID() {
+        return mUUID;
     }
 
-    public void setId(UUID id) {
-        mId = id;
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
     }
 
     public String getDescription() {
@@ -61,20 +82,31 @@ public class Task {
         mDate = date;
     }
 
-    public Task(UUID userId) {
-        mId = UUID.randomUUID();
-        mDate= DateUtils.getRandomDate(2000,2020);
-        mUserId=userId;
+    public Task() {
+
     }
+
+    public Task(UUID userId) {
+        this(UUID.randomUUID(),
+                null,
+                null,
+                null,
+                DateUtils.getRandomDate(2000,2020),
+                userId);
+    }
+
 
     public Task(UUID userId,String name, TaskState state) {
-        this(userId);
-        mName = name;
-        mState = state;
+        this(UUID.randomUUID(),
+                name,
+                state,
+                null,
+                DateUtils.getRandomDate(2000,2020),
+                userId);
     }
 
-    public Task(UUID id, String name, TaskState state, String description, Date date, UUID userId) {
-        mId = id;
+    public Task(UUID UUID, String name, TaskState state, String description, Date date, UUID userId) {
+        mUUID = UUID;
         mName = name;
         mState = state;
         mDescription = description;

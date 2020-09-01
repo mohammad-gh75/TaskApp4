@@ -11,16 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.maktab36.taskapp.R;
-import org.maktab36.taskapp.controller.activity.TabViewPagerActivity;
-import org.maktab36.taskapp.controller.fragment.TaskDetailFragment;
-import org.maktab36.taskapp.controller.fragment.TaskListFragment;
-import org.maktab36.taskapp.model.Task;
 import org.maktab36.taskapp.model.User;
 import org.maktab36.taskapp.repository.TaskRepository;
 import org.maktab36.taskapp.repository.UserRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserHolder> {
     private List<User> mUserList;
@@ -75,7 +70,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserHo
                 public void onClick(View view) {
                     mUserList.remove(mUser);
                     UserRepository.getInstance(mFragment.getActivity()).deleteUser(mUser);
-                    TaskRepository.getInstance(mFragment.getActivity()).deleteAll(mUser.getId());
+                    TaskRepository.getInstance(mFragment.getActivity()).deleteAll(mUser.getUUID());
                     notifyDataSetChanged();
 
                 }
@@ -91,7 +86,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserHo
             mTextViewUserMembershipDate.setText(user.getMembershipDate().toString());
             int taskNumber=TaskRepository
                     .getInstance(mFragment.getActivity())
-                    .getNumberOfUserTasks(user.getId());
+                    .getNumberOfUserTasks(user.getUUID());
             mTextViewUserTaskNumber.setText(String.valueOf(taskNumber));
         }
     }

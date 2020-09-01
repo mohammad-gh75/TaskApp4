@@ -16,7 +16,6 @@ import org.maktab36.taskapp.model.Task;
 import org.maktab36.taskapp.repository.UserRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 public class TaskSearchedListAdapter extends RecyclerView.Adapter<TaskSearchedListAdapter.TaskHolder> {
     private List<Task> mTaskList;
@@ -77,7 +76,7 @@ public class TaskSearchedListAdapter extends RecyclerView.Adapter<TaskSearchedLi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(mTask.getId());
+                    TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(mTask.getUUID());
                     taskDetailFragment.setTargetFragment(mFragment,
                             TaskListFragment.TASK_DETAIL_REQUEST_CODE);
                     taskDetailFragment.show(mFragment.getFragmentManager(),

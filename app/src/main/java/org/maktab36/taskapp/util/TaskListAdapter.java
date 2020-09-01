@@ -70,7 +70,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TaskDetailFragment taskDetailFragment=TaskDetailFragment.newInstance(mTask.getId());
+                    TaskDetailFragment taskDetailFragment=TaskDetailFragment.newInstance(mTask.getUUID());
                     taskDetailFragment.setTargetFragment(mFragment,
                             TaskListFragment.TASK_DETAIL_REQUEST_CODE);
                     taskDetailFragment.show(mFragment.getFragmentManager(),
@@ -81,7 +81,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
 
         public void bindTask(Task task,UUID userId) {
             mTask=task;
-            if(userId.equals(UserRepository.getInstance(mFragment.getActivity()).getAdmin().getId())){
+            if(userId.equals(UserRepository.getInstance(mFragment.getActivity()).getAdmin().getUUID())){
                 mTextViewTaskUser.setVisibility(View.VISIBLE);
                 mTextViewTaskUser.setText(UserRepository.
                         getInstance(mFragment.getActivity()).

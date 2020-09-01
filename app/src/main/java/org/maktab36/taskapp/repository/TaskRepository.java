@@ -1,18 +1,13 @@
 package org.maktab36.taskapp.repository;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import org.maktab36.taskapp.database.DataBaseHelper;
-import org.maktab36.taskapp.database.TaskDBSchema.TaskTable;
-import org.maktab36.taskapp.database.cursorwrapper.TaskCursorWrapper;
+import androidx.room.Room;
+
+import org.maktab36.taskapp.database.TaskDataBase;
 import org.maktab36.taskapp.model.Task;
 import org.maktab36.taskapp.model.TaskState;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +15,7 @@ import java.util.UUID;
 public class TaskRepository {
     private static TaskRepository sTaskRepository;
     private static Context mContext;
-    private SQLiteDatabase mDatabase;
+    private TaskDataBase mDatabase;
     private UUID mAdminId;
 
     public static TaskRepository getInstance(Context context) {
@@ -32,224 +27,88 @@ public class TaskRepository {
     }
 
     private TaskRepository() {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(mContext);
-        mDatabase = dataBaseHelper.getWritableDatabase();
-        mAdminId = UserRepository.getInstance(mContext).getAdmin().getId();
+        mDatabase = Room.databaseBuilder(mContext,
+                TaskDataBase.class,
+                "TaskManagerDB")
+                .allowMainThreadQueries()
+                .build();
+        mAdminId = UserRepository.getInstance(mContext).getAdmin().getUUID();
     }
 
     public List<Task> getToDoTasks(UUID userId) {
-        List<Task> toDoTasks = new ArrayList<>();
-        String selection;
-        String[] selectionArgs;
         if (userId.equals(mAdminId)) {
-            selection = TaskTable.COLS.STATE + "=?";
-            selectionArgs = new String[]{TaskState.TODO.toString()};
+            return mDatabase.taskDao().getTasks(TaskState.TODO.toString());
         } else {
-            selection = TaskTable.COLS.STATE + "=? AND " + TaskTable.COLS.USER_ID + "=?";
-            selectionArgs = new String[]{TaskState.TODO.toString(), userId.toString()};
+            return mDatabase.taskDao().getTasks(userId.toString(), TaskState.TODO.toString());
         }
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            while (!taskCursorWrapper.isAfterLast()) {
-                toDoTasks.add(taskCursorWrapper.getTask());
-                taskCursorWrapper.moveToNext();
-            }
-        } finally {
-            taskCursorWrapper.close();
-        }
-        return toDoTasks;
     }
 
     public List<Task> getDoneTasks(UUID userId) {
-        List<Task> doneTasks = new ArrayList<>();
-        String selection;
-        String[] selectionArgs;
         if (userId.equals(mAdminId)) {
-            selection = TaskTable.COLS.STATE + "=?";
-            selectionArgs = new String[]{TaskState.DONE.toString()};
+            return mDatabase.taskDao().getTasks(TaskState.DONE.toString());
         } else {
-            selection = TaskTable.COLS.STATE + "=? AND " + TaskTable.COLS.USER_ID + "=?";
-            selectionArgs = new String[]{TaskState.DONE.toString(), userId.toString()};
+            return mDatabase.taskDao().getTasks(userId.toString(), TaskState.DONE.toString());
         }
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            while (!taskCursorWrapper.isAfterLast()) {
-                doneTasks.add(taskCursorWrapper.getTask());
-                taskCursorWrapper.moveToNext();
-            }
-        } finally {
-            taskCursorWrapper.close();
-        }
-        return doneTasks;
     }
 
 
     public List<Task> getDoingTasks(UUID userId) {
-        List<Task> doingTasks = new ArrayList<>();
-        String selection;
-        String[] selectionArgs;
         if (userId.equals(mAdminId)) {
-            selection = TaskTable.COLS.STATE + "=?";
-            selectionArgs = new String[]{TaskState.DOING.toString()};
+            return mDatabase.taskDao().getTasks(TaskState.DOING.toString());
         } else {
-            selection = TaskTable.COLS.STATE + "=? AND " + TaskTable.COLS.USER_ID + "=?";
-            selectionArgs = new String[]{TaskState.DOING.toString(), userId.toString()};
+            return mDatabase.taskDao().getTasks(userId.toString(), TaskState.DOING.toString());
         }
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            while (!taskCursorWrapper.isAfterLast()) {
-                doingTasks.add(taskCursorWrapper.getTask());
-                taskCursorWrapper.moveToNext();
-            }
-        } finally {
-            taskCursorWrapper.close();
-        }
-        return doingTasks;
     }
 
     public Task get(UUID userId, UUID uuid) {
-        String selection;
-        String[] selectionArgs;
         if (userId.equals(mAdminId)) {
-            selection = TaskTable.COLS.UUID + "=?";
-            selectionArgs = new String[]{uuid.toString()};
+            return mDatabase.taskDao().get(uuid.toString());
         } else {
-            selection = TaskTable.COLS.UUID + "=? AND " + TaskTable.COLS.USER_ID + "=?";
-            selectionArgs = new String[]{uuid.toString(), userId.toString()};
-        }
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            return taskCursorWrapper.getTask();
-        } finally {
-            taskCursorWrapper.close();
+            return mDatabase.taskDao().get(userId.toString(), uuid.toString());
         }
     }
 
     public void update(Task task) {
-        ContentValues values = getTaskContentValue(task);
-        String where = TaskTable.COLS.UUID + "=?";
-        String[] whereArgs = new String[]{task.getId().toString()};
-        mDatabase.update(TaskTable.NAME, values, where, whereArgs);
+        mDatabase.taskDao().update(task);
     }
 
     public void delete(Task task) {
-        String selection;
-        String[] selectionArgs;
-        selection = TaskTable.COLS.UUID + "=?";
-        selectionArgs = new String[]{task.getId().toString()};
-        mDatabase.delete(TaskTable.NAME, selection, selectionArgs);
+        mDatabase.taskDao().delete(task);
     }
 
 
     public void insert(Task task) {
-        ContentValues values = getTaskContentValue(task);
-        mDatabase.insert(TaskTable.NAME, null, values);
+        mDatabase.taskDao().insert(task);
     }
 
     public void deleteAll(UUID userId) {
-        String selection;
-        String[] selectionArgs;
         if (userId.equals(mAdminId)) {
-            selection = null;
-            selectionArgs = null;
+            mDatabase.taskDao().deleteAll();
         } else {
-            selection = TaskTable.COLS.USER_ID + "=?";
-            selectionArgs = new String[]{userId.toString()};
+            mDatabase.taskDao().deleteAll(userId.toString());
         }
-        mDatabase.delete(TaskTable.NAME, selection, selectionArgs);
     }
-
     public List<Task> searchTasks(UUID userId, String name, String description, Date dateFrom, Date dateTo) {
-        List<Task> searchedTasks = new ArrayList<>();
-        StringBuilder selectBuilder = new StringBuilder();
-        List<String> selectionList = new ArrayList<>();
-        if (!name.equals("")) {
-            if (selectBuilder.length() != 0) {
-                selectBuilder.append(" AND ");
-            }
-            selectBuilder.append(TaskTable.COLS.NAME + " LIKE ?");
-            selectionList.add("%"+name+"%");
-        }
-        if (!description.equals("")) {
-            if (selectBuilder.length() != 0) {
-                selectBuilder.append(" AND ");
-            }
-            selectBuilder.append(TaskTable.COLS.DESCRIPTION + " LIKE ?");
-            selectionList.add("%"+description+"%");
-        }
-        if (dateFrom!=null) {
-            if (selectBuilder.length() != 0) {
-                selectBuilder.append(" AND ");
-            }
-            selectBuilder.append(TaskTable.COLS.DATE + ">=?");
-            selectionList.add(String.valueOf(dateFrom.getTime()));
-        }
-        if (dateTo!=null) {
-            if (selectBuilder.length() != 0) {
-                selectBuilder.append(" AND ");
-            }
-            selectBuilder.append(TaskTable.COLS.DATE + "<=?");
-            selectionList.add(String.valueOf(dateTo.getTime()));
-        }
-        if (!userId.equals(mAdminId)) {
-            if (selectBuilder.length() != 0) {
-                selectBuilder.append(" AND ");
-            }
-            selectBuilder.append(TaskTable.COLS.USER_ID + "=?");
-            selectionList.add(userId.toString());
-        }
-        String selection = selectBuilder.toString();
-        String[] selectionArgs=new String[selectionList.size()];
-        selectionList.toArray(selectionArgs);
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            while (!taskCursorWrapper.isAfterLast()) {
-                searchedTasks.add(taskCursorWrapper.getTask());
-                taskCursorWrapper.moveToNext();
-            }
-        } finally {
-            taskCursorWrapper.close();
-        }
-        return searchedTasks;
+        String[] params = new String[4];
+        params[0] = !name.equals("") ? ("%" + name + "%") : "%%";
+        params[1] = !description.equals("") ? ("%" + description + "%") : "%%";
+        params[2] = dateFrom != null ? String.valueOf(dateFrom.getTime()) : "0";
+        params[3]=dateTo !=null ? String.valueOf(dateTo.getTime()) : String.valueOf(Long.MAX_VALUE);
+        return !userId.equals(mAdminId) ?
+                mDatabase.taskDao().searchTasks(
+                params[0],
+                params[1],
+                params[2],
+                params[3],
+                userId.toString()) :
+                mDatabase.taskDao().searchTasks(
+                        params[0],
+                        params[1],
+                        params[2],
+                        params[3] );
     }
 
     public int getNumberOfUserTasks(UUID userId) {
-        String selection = TaskTable.COLS.USER_ID + "=?";
-        String[] selectionArgs = new String[]{userId.toString()};
-        TaskCursorWrapper taskCursorWrapper = queryTasks(selection, selectionArgs);
-        try {
-            taskCursorWrapper.moveToFirst();
-            return taskCursorWrapper.getCount();
-        } finally {
-            taskCursorWrapper.close();
-        }
-    }
-
-    private TaskCursorWrapper queryTasks(String selection, String[] selectionArgs) {
-        Cursor cursor = mDatabase.query(TaskTable.NAME,
-                null,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null);
-
-        return new TaskCursorWrapper(cursor);
-    }
-
-    private ContentValues getTaskContentValue(Task task) {
-        ContentValues values = new ContentValues();
-        values.put(TaskTable.COLS.UUID, task.getId().toString());
-        values.put(TaskTable.COLS.NAME, task.getName());
-        values.put(TaskTable.COLS.DATE, task.getDate().getTime());
-        values.put(TaskTable.COLS.STATE, task.getState().toString());
-        values.put(TaskTable.COLS.DESCRIPTION, task.getDescription());
-        values.put(TaskTable.COLS.USER_ID, task.getUserId().toString());
-        return values;
+        return mDatabase.taskDao().getNumberOfUserTasks(userId.toString());
     }
 }

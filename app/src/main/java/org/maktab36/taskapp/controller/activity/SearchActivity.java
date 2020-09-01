@@ -1,13 +1,10 @@
-package org.maktab36.taskapp;
+package org.maktab36.taskapp.controller.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
-import org.maktab36.taskapp.controller.activity.SingleFragmentActivity;
 import org.maktab36.taskapp.controller.fragment.SearchFragment;
 
 public class SearchActivity extends SingleFragmentActivity {

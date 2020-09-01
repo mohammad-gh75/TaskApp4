@@ -22,7 +22,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.maktab36.taskapp.R;
-import org.maktab36.taskapp.SearchActivity;
 import org.maktab36.taskapp.controller.fragment.TaskDetailFragment;
 import org.maktab36.taskapp.controller.fragment.TaskListFragment;
 import org.maktab36.taskapp.model.TaskState;
@@ -190,7 +189,7 @@ public class TabViewPagerActivity extends AppCompatActivity {
                         mRepository.deleteAll(UserRepository.
                                 getInstance(TabViewPagerActivity.this).
                                 getCurrentUser().
-                                getId());
+                                getUUID());
                         updateFragments();
                     }
                 })

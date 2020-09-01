@@ -17,10 +17,8 @@ import android.widget.EditText;
 
 import org.maktab36.taskapp.R;
 import org.maktab36.taskapp.model.Task;
-import org.maktab36.taskapp.model.TaskState;
 import org.maktab36.taskapp.repository.TaskRepository;
 import org.maktab36.taskapp.repository.UserRepository;
-import org.maktab36.taskapp.util.TaskListAdapter;
 import org.maktab36.taskapp.util.TaskSearchedListAdapter;
 
 import java.text.SimpleDateFormat;
@@ -105,7 +103,7 @@ public class SearchFragment extends Fragment {
                 mTasks=TaskRepository.getInstance(getActivity()).searchTasks(UserRepository
                                 .getInstance(getActivity())
                                 .getCurrentUser()
-                                .getId()
+                                .getUUID()
                         ,UIs[0]
                         ,UIs[1]
                         ,mDateFrom
