@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.maktab36.taskapp">
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.activity.SearchActivity"></activity>
+        <activity android:name=".controller.activity.SearchActivity"/>
         <activity
             android:name=".controller.activity.AdminPanelActivity"
             android:label="@string/label_admin_panel" />
@@ -26,6 +32,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.activity.TabViewPagerActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="org.maktab36.taskapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

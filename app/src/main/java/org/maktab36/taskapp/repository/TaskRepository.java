@@ -8,6 +8,7 @@ import org.maktab36.taskapp.database.TaskDataBase;
 import org.maktab36.taskapp.model.Task;
 import org.maktab36.taskapp.model.TaskState;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -110,5 +111,9 @@ public class TaskRepository {
 
     public int getNumberOfUserTasks(UUID userId) {
         return mDatabase.taskDao().getNumberOfUserTasks(userId.toString());
+    }
+
+    public File getPhotoFile(Context context, Task task) {
+        return new File(context.getFilesDir(), task.getPhotoFileName());
     }
 }

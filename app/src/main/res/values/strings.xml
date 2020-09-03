@@ -13,6 +13,7 @@
     <string name="text_view_detail_title">Title</string>
     <string name="text_view_detail_description">Description</string>
     <string name="text_view_detail_state">State</string>
+    <string name="text_view_detail_photo">Photo</string>
 
 
     <string name="button_build">Build</string>

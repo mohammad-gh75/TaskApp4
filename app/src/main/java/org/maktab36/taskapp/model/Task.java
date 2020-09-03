@@ -105,6 +105,10 @@ public class Task {
                 userId);
     }
 
+    public String getPhotoFileName() {
+        return "IMG_" + getUUID() + ".jpg";
+    }
+
     public Task(UUID UUID, String name, TaskState state, String description, Date date, UUID userId) {
         mUUID = UUID;
         mName = name;
