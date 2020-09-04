@@ -90,23 +90,22 @@ public class TaskRepository {
         }
     }
     public List<Task> searchTasks(UUID userId, String name, String description, Date dateFrom, Date dateTo) {
-        String[] params = new String[4];
-        params[0] = !name.equals("") ? ("%" + name + "%") : "%%";
-        params[1] = !description.equals("") ? ("%" + description + "%") : "%%";
-        params[2] = dateFrom != null ? String.valueOf(dateFrom.getTime()) : "0";
-        params[3]=dateTo !=null ? String.valueOf(dateTo.getTime()) : String.valueOf(Long.MAX_VALUE);
+        String nameWhere = !name.equals("") ? ("%" + name + "%") : "%%";
+        String descriptionWhere = !description.equals("") ? ("%" + description + "%") : "%%";
+        long dateFromWhere = dateFrom != null ? dateFrom.getTime() : 0;
+        long dateToWhere=dateTo !=null ? dateTo.getTime() : Long.MAX_VALUE;
         return !userId.equals(mAdminId) ?
                 mDatabase.taskDao().searchTasks(
-                params[0],
-                params[1],
-                params[2],
-                params[3],
+                nameWhere,
+                descriptionWhere,
+                dateFromWhere,
+                dateToWhere,
                 userId.toString()) :
                 mDatabase.taskDao().searchTasks(
-                        params[0],
-                        params[1],
-                        params[2],
-                        params[3] );
+                        nameWhere,
+                        descriptionWhere,
+                        dateFromWhere,
+                        dateToWhere );
     }
 
     public int getNumberOfUserTasks(UUID userId) {

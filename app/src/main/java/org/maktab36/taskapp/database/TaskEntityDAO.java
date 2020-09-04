@@ -56,11 +56,11 @@ public interface TaskEntityDAO {
 
     @Query("SELECT * FROM TaskTable WHERE name LIKE :name AND description LIKE :description" +
             " AND date >= :dateFrom AND date <= :dateTo")
-    List<Task> searchTasks(String name,String description,String dateFrom,String dateTo);
+    List<Task> searchTasks(String name,String description,long dateFrom,long dateTo);
 
     @Query("SELECT * FROM TaskTable WHERE name LIKE :name AND description LIKE :description" +
             " AND userId=:userId AND date >= :dateFrom AND date <= :dateTo")
-    List<Task> searchTasks(String name,String description,String dateFrom,String dateTo,String userId);
+    List<Task> searchTasks(String name,String description,long dateFrom,long dateTo,String userId);
 
     @Query("SELECT count(*) FROM TaskTable WHERE userId=:userId")
     int getNumberOfUserTasks(String userId);

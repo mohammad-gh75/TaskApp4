@@ -70,6 +70,11 @@ public class SearchFragment extends Fragment {
         mDateFormatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         mTimeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
         mTasks=new ArrayList<>();
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(1970,0,1,0,0,0);
+        mDateFrom=calendar.getTime();
+        calendar.set(2100,11,31,23,59,59);
+        mDateTo=calendar.getTime();
     }
 
     @Override
@@ -165,10 +170,10 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Date userSelectedDateFrom = new Date();
-        Date userSelectedDateTo = new Date();
-        Date userSelectedTimeFrom = new Date();
-        Date userSelectedTimeTo = new Date();
+        Date userSelectedDateFrom = mDateFrom;
+        Date userSelectedDateTo = mDateTo;
+        Date userSelectedTimeFrom = mDateFrom;
+        Date userSelectedTimeTo = mDateTo;
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
 

@@ -380,7 +380,8 @@ public class TaskDetailFragment extends DialogFragment {
 
         if (requestCode == PICK_PHOTO_REQUEST_CODE) {
             Uri pickedPhoto=data.getData();
-            mImageViewTaskPhoto.setImageURI(pickedPhoto);
+            Bitmap bitmap=PictureUtils.getScaledBitmap(pickedPhoto.getPath(),mImageViewTaskPhoto);
+            mImageViewTaskPhoto.setImageBitmap(bitmap);
         }
     }
 
